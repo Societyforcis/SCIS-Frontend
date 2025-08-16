@@ -5,7 +5,7 @@ import { logout, setAuth } from '../redux/slices/authSlice';
 import axios from 'axios';
 
 // Update API_URL constant to ensure correct path
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/user';
+const API_URL = import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL}/api/user`;
 
 export default function AuthVerify() {
   const navigate = useNavigate();

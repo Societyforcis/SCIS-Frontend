@@ -85,7 +85,7 @@ const Login = () => {
 
     try {
         console.log("Attempting login for:", email);
-        const response = await fetch("http://localhost:5000/api/user/login", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -186,7 +186,7 @@ const Login = () => {
       }
       
       // Send to your backend
-      const response = await axios.post(`http://localhost:5000/api/user/google/auth`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/google/auth`, {
         email,
         googleId,
         firstName,
@@ -340,7 +340,7 @@ const Login = () => {
       const provider = new GithubAuthProvider();
       const result = await signInWithPopup(auth, provider);
 
-      const response = await axios.post(`http://localhost:5000/api/login`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, {
         email: result.user.email,
         password: result.user.uid
       }, {
@@ -408,7 +408,7 @@ const Login = () => {
 
   const checkMembershipStatus = async (email) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/api/membership/check/${email}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/api/membership/check/${email}`);
       return response.data;
     } catch (error) {
       console.error('Error checking membership status:', error);

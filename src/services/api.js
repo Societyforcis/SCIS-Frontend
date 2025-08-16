@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 export const apiService = {
   login: async (email, password) => {
@@ -14,7 +14,7 @@ export const apiService = {
 
   signup: async (username, email, password) => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/authenticate-sign`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/authenticate-sign`, {
         username,
         email,
         password

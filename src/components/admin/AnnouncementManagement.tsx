@@ -188,7 +188,7 @@ const AnnouncementManagement = () => {
  
       const apiUrl = process.env.NODE_ENV === 'production' 
         ? '/api/notifications' 
-        : 'http://localhost:5000/api/notifications';
+        : '${import.meta.env.VITE_API_URL}/api/notifications';
 
       const payload = {
         title: data.title.trim(),

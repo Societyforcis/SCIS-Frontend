@@ -77,7 +77,7 @@ const Notifications = () => {
         return
       }
 
-      const apiBase = process.env.NODE_ENV === "production" ? "/api" : "http://localhost:5000/api"
+      const apiBase = process.env.NODE_ENV === "production" ? "/api" : "${import.meta.env.VITE_API_URL}/api"
       const response = await fetch(`${apiBase}/notifications/user`, {
         method: "GET",
         headers: {
@@ -122,7 +122,7 @@ const Notifications = () => {
         return
       }
 
-      const apiBase = process.env.NODE_ENV === "production" ? "/api" : "http://localhost:5000/api"
+      const apiBase = process.env.NODE_ENV === "production" ? "/api" : "${import.meta.env.VITE_API_URL}/api"
       const response = await fetch(`${apiBase}/notifications/${id}/read`, {
         method: "PATCH",
         headers: {
@@ -159,7 +159,7 @@ const Notifications = () => {
         return
       }
 
-      const apiBase = process.env.NODE_ENV === "production" ? "/api" : "http://localhost:5000/api"
+      const apiBase = process.env.NODE_ENV === "production" ? "/api" : "${import.meta.env.VITE_API_URL}/api"
       const response = await fetch(`${apiBase}/notifications/mark-all-read`, {
         method: "PATCH",
         headers: {
@@ -187,7 +187,7 @@ const Notifications = () => {
     if (!token) return
 
     try {
-      const apiBase = process.env.NODE_ENV === "production" ? "/api" : "http://localhost:5000/api"
+      const apiBase = process.env.NODE_ENV === "production" ? "/api" : "${import.meta.env.VITE_API_URL}/api"
       const response = await fetch(`${apiBase}/notifications/unread-count`, {
         headers: {
           Authorization: `Bearer ${token}`,

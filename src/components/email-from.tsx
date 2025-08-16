@@ -61,7 +61,7 @@ export default function EmailSubscribe() {
     setSubmitStatus({ loading: true, message: "", error: false });
 
     try {
-      const response = await fetch('http://localhost:5000/api/newsletter/subscribe', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/newsletter/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

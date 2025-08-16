@@ -23,7 +23,7 @@ const NotificationManager = () => {
       if (!token) return;
       
       try {
-        const response = await fetch('http://localhost:5000/api/admin/users', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -59,8 +59,8 @@ const NotificationManager = () => {
         ...notificationData,
         image: notificationData.image ? '[BASE64_STRING]' : null
       });
-      
-      const response = await fetch('http://localhost:5000/api/notifications', {
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/notifications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

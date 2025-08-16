@@ -80,7 +80,7 @@ const SignIn= () => {
 
     setLoading(true)
     try {
-      const response = await fetch("http://localhost:5000/api/user/signin", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +135,7 @@ const SignIn= () => {
   const handleProfileComplete = async (profileData) => {
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch("http://localhost:5000/api/user/profile", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -190,7 +190,7 @@ const SignIn= () => {
       }
       
       // Send to your backend
-      const response = await axios.post("http://localhost:5000/api/user/google/auth", {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/google/auth`, {
         email,
         googleId,
         firstName,

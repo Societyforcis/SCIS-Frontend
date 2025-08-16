@@ -128,14 +128,14 @@ const Membership = () => {
       let membershipResponse;
       try {
         membershipResponse = await axios.get(
-          `http://localhost:5000/api/membership/email/${encodeURIComponent(user.email)}`,
+          `${import.meta.env.VITE_API_URL}/api/membership/email/${encodeURIComponent(user.email)}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } catch (emailError) {
         console.log("Email endpoint failed, trying current endpoint");
         // If email endpoint fails, try the current endpoint
         membershipResponse = await axios.get(
-          `http://localhost:5000/api/membership/current`,
+          `${import.meta.env.VITE_API_URL}/api/membership/current`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       }
@@ -186,7 +186,7 @@ const Membership = () => {
         try {
           if (user?.email) {
             const emailResponse = await axios.get(
-              `http://localhost:5000/api/membership/email/${encodeURIComponent(user.email)}`,
+              `${import.meta.env.VITE_API_URL}/api/membership/email/${encodeURIComponent(user.email)}`,
               { headers: { Authorization: `Bearer ${token}` } }
             );
             
@@ -246,7 +246,7 @@ const Membership = () => {
 
       // First verify the current plan from the backend
       const currentMembershipResponse = await axios.get(
-        "http://localhost:5000/api/membership/current", 
+        `${import.meta.env.VITE_API_URL}/api/membership/current`, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -264,7 +264,7 @@ const Membership = () => {
 
       // Proceed with the upgrade
       const response = await axios.post(
-        "http://localhost:5000/api/membership/upgrade", 
+        `${import.meta.env.VITE_API_URL}/api/membership/upgrade`, 
         { 
           planId,
           currentMembershipId: currentMembership._id // Include the current membership ID
@@ -353,7 +353,7 @@ const Membership = () => {
         setUpgrading(planId); // Show loading state
         
         const response = await axios.get(
-          `http://localhost:5000/api/membership/email/${encodeURIComponent(user.email)}`,
+          `${import.meta.env.VITE_API_URL}/api/membership/email/${encodeURIComponent(user.email)}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         

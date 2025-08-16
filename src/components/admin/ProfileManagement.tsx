@@ -80,7 +80,7 @@ export default function ProfileManagement() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5000/api/admin/profiles', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/profiles`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -121,7 +121,7 @@ export default function ProfileManagement() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://localhost:5000/api/admin/profile/${id}`, {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/profile/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -164,7 +164,7 @@ export default function ProfileManagement() {
         profilePicture: uploadedImage
       };
 
-      const response = await fetch(`http://localhost:5000/api/admin/profile/${editingProfile._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/profile/${editingProfile._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

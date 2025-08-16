@@ -42,6 +42,13 @@ const Settings = () => {
     fetchSettings()
   }, [])
 
+  // Auto-save settings when they change (after initial fetch)
+  useEffect(() => {
+    if (!initialFetch) {
+      saveSettingsToBackend()
+    }
+  }, [darkMode, emailNotifications, pushNotifications, profileVisibility, initialFetch])
+
   const fetchSettings = async () => {
     try {
       setLoading(true)
@@ -56,7 +63,7 @@ const Settings = () => {
       
       console.log("Fetching user settings with token:", token.substring(0, 10) + "...")
       
-      const response = await fetch("http://localhost:5000/api/user/settings", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/settings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -98,6 +105,49 @@ const Settings = () => {
     }
   }
 
+  const saveSettingsToBackend = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      
+      if (!token) {
+        console.error("No authentication token found")
+        return
+      }
+      
+      // Create the payload with the current settings - using explicit booleans
+      const payload = {
+        darkMode: Boolean(darkMode),
+        emailNotifications: Boolean(emailNotifications),
+        pushNotifications: Boolean(pushNotifications),
+        profileVisibility: Boolean(profileVisibility),
+      }
+      
+      console.log("Auto-saving settings:", payload)
+      
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/settings`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+      
+      if (response.ok && data.success) {
+        console.log("Settings auto-saved successfully")
+        // Show brief success message
+        setSuccess("Settings saved automatically!")
+        setTimeout(() => setSuccess(""), 2000)
+      } else {
+        console.error("Failed to auto-save settings:", data.message)
+      }
+    } catch (error) {
+      console.error("Error auto-saving settings:", error)
+    }
+  }
+
   const handleSaveSettings = async () => {
     // Show confirmation dialog
     const result = await Swal.fire({
@@ -124,17 +174,17 @@ const Settings = () => {
         throw new Error("No authentication token found")
       }
       
-      // Create the payload with the current settings
+      // Create the payload with the current settings - using explicit booleans
       const payload = {
-        darkMode,
-        emailNotifications,
-        pushNotifications,
-        profileVisibility,
+        darkMode: Boolean(darkMode),
+        emailNotifications: Boolean(emailNotifications),
+        pushNotifications: Boolean(pushNotifications),
+        profileVisibility: Boolean(profileVisibility),
       }
       
-      console.log("Sending settings update:", payload)
+      console.log("Sending settings update with explicit booleans:", payload)
       
-      const response = await fetch("http://localhost:5000/api/user/settings", {
+      const response = await fetch("${import.meta.env.VITE_API_URL}/api/user/settings", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

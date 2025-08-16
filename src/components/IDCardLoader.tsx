@@ -26,7 +26,7 @@ const IDCardLoader: React.FC = () => {
         
         // If ID parameter is present, validate it
         const response = await axios.get(
-          `http://localhost:5000/api/membership/id/${id}/validate`,
+          `${import.meta.env.VITE_API_URL}/api/membership/id/${id}/validate`,
           { timeout: 5000 }
         );
         

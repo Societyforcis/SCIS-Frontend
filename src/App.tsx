@@ -133,7 +133,7 @@ const AppContent = () => {
           
           // Verify the token with the backend
           try {
-            const response = await fetch('http://localhost:5000/api/user/verify-token', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/verify-token`, {
               method: 'GET',
               headers: {
                 'Authorization': `Bearer ${token}`,
@@ -155,7 +155,7 @@ const AppContent = () => {
               dispatch(setAuth({ user: data.user, token }));
             } else {
               // Fallback to fetching user data if not included in verify-token response
-              const userResponse = await fetch('http://localhost:5000/api/user/profile', {
+              const userResponse = await fetch('${import.meta.env.VITE_API_URL}/api/user/profile', {
                 headers: {
                   'Authorization': `Bearer ${token}`
                 }

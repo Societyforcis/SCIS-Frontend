@@ -35,7 +35,7 @@ export default function NewsletterSubscriberManagement() {
     setLoading(true);
     try {
       // Update the endpoint to match what's defined in your backend routes
-      const response = await fetch('http://localhost:5000/api/newsletter/subscriptions', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/newsletter/subscriptions`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -74,7 +74,7 @@ export default function NewsletterSubscriberManagement() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://localhost:5000/api/admin/newsletter/subscriber/${id}`, {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/subscriber/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -111,7 +111,7 @@ export default function NewsletterSubscriberManagement() {
     if (!editingSubscriber) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/newsletter/subscriber/${editingSubscriber._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/subscriber/${editingSubscriber._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ export default function NewsletterSubscriberManagement() {
 
   const handleToggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/newsletter/subscriber/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/subscriber/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,0 +1,30 @@
+/* Custom responsive breakpoints for navbar */
+@media (max-width: 475px) {
+  .xs\:hidden {
+    display: none;
+  }
+  .xs\:block {
+    display: block;
+  }
+  .xs\:inline {
+    display: inline;
+  }
+  .xs\:flex {
+    display: flex;
+  }
+  .xs\:text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  .xs\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .xs\:px-1 {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+  .xs\:gap-1 {
+    gap: 0.25rem;
+  }
+}

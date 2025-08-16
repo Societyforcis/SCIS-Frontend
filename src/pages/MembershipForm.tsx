@@ -32,7 +32,7 @@ const handleSubmit = async () => {
     };
 
     const response = await axios.post(
-      'http://localhost:5000/api/membership', 
+      '${import.meta.env.VITE_API_URL}/api/membership', 
       membershipData,
       { 
         headers: { 
@@ -47,7 +47,7 @@ const handleSubmit = async () => {
       try {
         // Create notification about the new membership
         await axios.post(
-          'http://localhost:5000/api/notifications/ok',
+          `${import.meta.env.VITE_API_URL}/api/notifications/ok`,
           {
             title: 'New Membership Application',
             message: `${formData.firstName} ${formData.lastName} has applied for a ${formData.membershipType} membership.`,

@@ -1,7 +1,7 @@
 const handleLogin = async (values) => {
   try {
-    const response = await axios.post('http://localhost:5000/api/user/login', values);
-    
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/login`, values);
+
     if (response.data.success) {
       // Store in Redux
       dispatch(setCredentials({

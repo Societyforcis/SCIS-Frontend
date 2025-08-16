@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const API_URL = 'http://localhost:5000/api/';
+const API_URL = '${import.meta.env.VITE_API_URL}/api/';
 
 export default function VerifyEmail() {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function VerifyEmail() {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/verify-email?token=${token}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/verify-email?token=${token}`);
         if (response.data.success) {
           Swal.fire({
             icon: 'success',

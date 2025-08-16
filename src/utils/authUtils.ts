@@ -2,7 +2,7 @@ import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/user';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/user`;
 
 export const handleGoogleAuth = async (isSignUp = false) => {
   try {

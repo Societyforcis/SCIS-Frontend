@@ -43,7 +43,7 @@ const H = () => {
           return
         }
 
-        const response = await axios.get(`http://localhost:5000/api/membership/email/${encodeURIComponent(email)}`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/membership/email/${encodeURIComponent(email)}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }

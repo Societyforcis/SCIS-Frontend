@@ -148,7 +148,7 @@ const Profile = () => {
     
     try {
       console.log("Fetching profile with token:", token);
-      const response = await axios.get('http://localhost:5000/api/user/profile', {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -257,7 +257,7 @@ const Profile = () => {
     setSuccess("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/user/profile", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -80,7 +80,7 @@ export default function IDCard() {
           try {
             // Don't include auth headers - this should be a public endpoint
             response = await axios.get(
-              `http://localhost:5000/api/membership/id/${membershipId}`
+              `${import.meta.env.VITE_API_URL}/api/membership/id/${membershipId}`
             );
             
             console.log('📥 API Response status:', response.status);
@@ -91,7 +91,7 @@ export default function IDCard() {
             if (token && email) {
               console.log('🔄 ID lookup failed, trying email lookup instead');
               response = await axios.get(
-                `http://localhost:5000/api/membership/email/${encodeURIComponent(email)}`,
+                `${import.meta.env.VITE_API_URL}/api/membership/email/${encodeURIComponent(email)}`,
                 {
                   headers: {
                     'Authorization': `Bearer ${token}`,
@@ -109,7 +109,7 @@ export default function IDCard() {
           console.log('🔍 Fetching membership data for email:', email);
           
           response = await axios.get(
-            `http://localhost:5000/api/membership/email/${encodeURIComponent(email)}`,
+            `${import.meta.env.VITE_API_URL}/api/membership/email/${encodeURIComponent(email)}`,
             {
               headers: {
                 'Authorization': `Bearer ${token}`,

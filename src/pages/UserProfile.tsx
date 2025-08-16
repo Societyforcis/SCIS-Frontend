@@ -36,7 +36,7 @@ const UserProfile: React.FC = () => {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch("http://localhost:5000/api/api/user/profile", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ const UserProfile: React.FC = () => {
     setSaving(true)
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch("http://localhost:5000/api/api/user/profile", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

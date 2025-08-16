@@ -21,7 +21,7 @@ const AuthTest: React.FC = () => {
       });
       
       const response = await axios.get(
-        'http://localhost:5000/api/membership/auth-check',
+        `${import.meta.env.VITE_API_URL}/api/membership/auth-check`,
         {
           headers: { 
             'Authorization': `Bearer ${authToken}`,

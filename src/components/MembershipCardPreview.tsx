@@ -29,7 +29,7 @@ const MembershipCardPreview: React.FC = () => {
       try {
         console.log('Trying to get current membership...');
         const currentResponse = await axios.get(
-          'http://localhost:5000/api/membership/current',
+          `${import.meta.env.VITE_API_URL}/api/membership/current`,
           {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -56,7 +56,7 @@ const MembershipCardPreview: React.FC = () => {
         console.log(`Fetching membership data for email: ${email}`);
         
         const membershipResponse = await axios.get(
-          `http://localhost:5000/api/membership/email/${encodeURIComponent(email)}`,
+          `${import.meta.env.VITE_API_URL}/api/membership/email/${encodeURIComponent(email)}`,
           {
             headers: {
               'Authorization': `Bearer ${token}`,

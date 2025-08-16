@@ -35,28 +35,28 @@ const AdminDashboard = () => {
   const fetchDashboardStats = async () => {
     try {
       // Fetch users count
-      const usersResponse = await fetch('http://localhost:5000/api/admin/stats/users', {
+      const usersResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/stats/users`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
       // Fetch memberships count
-      const membershipsResponse = await fetch('http://localhost:5000/api/admin/stats/memberships', {
+      const membershipsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/stats/memberships`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
       // Fetch notifications count
-      const notificationsResponse = await fetch('http://localhost:5000/api/admin/stats/notifications', {
+      const notificationsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/stats/notifications`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
       // Fetch newsletter subscribers count
-      const newsletterResponse = await fetch('http://localhost:5000/api/admin/stats/newsletter', {
+      const newsletterResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/stats/newsletter`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

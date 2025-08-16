@@ -4,7 +4,7 @@ import { logout } from '../redux/slices/authSlice';
 
 // Create axios instance with defaults
 const api = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: `${import.meta.env.VITE_API_URL}`,
 });
 
 // Add request interceptor to include token in all requests

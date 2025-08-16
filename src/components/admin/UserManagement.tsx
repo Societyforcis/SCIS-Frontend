@@ -21,7 +21,7 @@ export default function UserManagement() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/admin/users', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -45,7 +45,7 @@ export default function UserManagement() {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/user/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/user/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

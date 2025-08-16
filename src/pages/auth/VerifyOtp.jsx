@@ -30,7 +30,7 @@ export default function VerifyOtp() {
     setIsLoading(true);
     
     try {
-      const response = await axios.post("http://localhost:5000/api/user/verify-account-otp", {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/verify-account-otp`, {
         email,
         otp
       });
@@ -91,8 +91,8 @@ export default function VerifyOtp() {
       // Check if this is for account verification or password reset
       const isNewUser = location.state?.newUser;
       const endpoint = isNewUser 
-        ? 'http://localhost:5000/api/user/resend-verification-otp'
-        : 'http://localhost:5000/api/user/resend-otp';
+        ? `${import.meta.env.VITE_API_URL}/api/user/resend-verification-otp`
+        : `${import.meta.env.VITE_API_URL}/api/user/resend-otp`;
       
       console.log(`Sending request to ${endpoint} for ${email}`);
       

@@ -127,7 +127,7 @@ const AnnouncementManagement = () => {
         image: previewImage // Send base64 image data
       };
 
-      const response = await axios.post('http://localhost:5000/api/notifications/ok', payload, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/notifications/ok`, payload, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`

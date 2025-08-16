@@ -175,7 +175,7 @@ const fetchUnreadCount = async () => {
   try {
     const apiBase = process.env.NODE_ENV === 'production' 
       ? '/api' 
-      : 'http://localhost:5000/api';
+      : `${import.meta.env.VITE_API_URL}/api`;
       
     const response = await fetch(`${apiBase}/notifications/unread-count`, {
       headers: {
@@ -214,7 +214,7 @@ useEffect(() => {
       const userId = localStorage.getItem('userId') || '65f8e4b7d4f8a8c8f8f8';
       
       await axios.patch(
-        `http://localhost:5000/api/notifications/mark-all-read?userId=${userId}`,
+        `${import.meta.env.VITE_API_URL}/api/notifications/mark-all-read?userId=${userId}`,
         {},
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
@@ -289,16 +289,16 @@ useEffect(() => {
     <div className="relative">
       <button
         onClick={handleNotificationIconClick}
-        className="p-2 rounded-full hover:bg-gray-100 relative"
+        className="p-1 xl:p-2 rounded-full hover:bg-gray-100 relative"
         aria-label="Notifications"
       >
         {unreadCount > 0 ? (
-          <BellRing className="h-5 w-5 text-gray-600" />
+          <BellRing className="h-4 w-4 xl:h-5 xl:w-5 text-gray-600" />
         ) : (
-          <Bell className="h-5 w-5 text-gray-600" />
+          <Bell className="h-4 w-4 xl:h-5 xl:w-5 text-gray-600" />
         )}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 xl:h-5 xl:w-5 flex items-center justify-center">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -342,29 +342,29 @@ useEffect(() => {
         <div className="border-b py-2">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4 text-sm text-gray-600"></div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-gray-600 font-medium">
-                <Mail className="h-4 w-4 text-red-500" />
-                <span className="text-sm">info@societycis.org</span>
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-1 sm:gap-2 text-gray-600 font-medium">
+                <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
+                <span className="text-xs sm:text-sm">info@societycis.org</span>
               </div>
-              <div className="flex gap-4 border-l pl-4">
+              <div className="hidden sm:flex gap-2 sm:gap-4 border-l pl-2 sm:pl-4">
                 <a
                   href="https://www.facebook.com/"
                   className="text-gray-600 hover:text-red-500 transition-all duration-300 transform hover:scale-110"
                 >
-                  <Facebook className="h-5 w-5" />
+                  <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
                 </a>
                 <a
                   href="https://twitter.com/"
                   className="text-gray-600 hover:text-red-500 transition-all duration-300 transform hover:scale-110"
                 >
-                  <Twitter className="h-5 w-5" />
+                  <Twitter className="h-4 w-4 sm:h-5 sm:w-5" />
                 </a>
                 <a
                   href="https://www.LinkedIn.com/"
                   className="text-gray-600 hover:text-red-500 transition-all duration-300 transform hover:scale-110"
                 >
-                  <Linkedin className="h-5 w-5" />
+                  <Linkedin className="h-4 w-4 sm:h-5 sm:w-5" />
                 </a>
               </div>
             </div>
@@ -399,15 +399,16 @@ useEffect(() => {
                 </Link>
               </div>
 
-              <div className="hidden lg:flex items-center justify-end flex-grow ml-[150px]">
+              <div className="hidden lg:flex items-center justify-end flex-grow ml-4 xl:ml-[150px]">
                 {/* Add admin indicator */}
                 {user?.isAdmin && (
                   <button
                     onClick={() => handleNavigation("/admin")}
-                    className="flex items-center gap-2 px-4 py-2 mr-4 bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-colors text-sm font-semibold"
+                    className="flex items-center gap-1 xl:gap-2 px-2 xl:px-4 py-2 mr-2 xl:mr-4 bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-colors text-xs xl:text-sm font-semibold"
                   >
-                    <Shield className="h-4 w-4" />
-                    Admin Dashboard
+                    <Shield className="h-3 w-3 xl:h-4 xl:w-4" />
+                    <span className="hidden xl:inline">Admin Dashboard</span>
+                    <span className="xl:hidden">Admin</span>
                   </button>
                 )}
 
@@ -419,15 +420,16 @@ useEffect(() => {
                     onMouseEnter={() => setActiveMenu(item.title)}
                     onMouseLeave={() => setActiveMenu(null)}
                   >
-                    <button className={`flex items-center px-4 text-sm ${
+                    <button className={`flex items-center px-1 xl:px-4 text-xs xl:text-sm ${
                       item.title === "ReachUs" && user?.isAdmin ? 
                       "text-red-500 font-semibold" : 
                       "text-gray-700"
-                    } hover:text-red-500 transition-all duration-300 font-medium`}>
-                      <item.icon className="h-4 w-4" />
-                      {item.title}
+                    } hover:text-red-500 transition-all duration-300 font-medium whitespace-nowrap`}>
+                      <item.icon className="h-3 w-3 xl:h-4 xl:w-4 mr-1" />
+                      <span className="hidden xl:inline">{item.title}</span>
+                      <span className="xl:hidden text-xs">{item.title.slice(0, 4)}</span>
                       <ChevronDown
-                        className={`h-4 w-4 transform transition-transform duration-300 ${
+                        className={`h-3 w-3 xl:h-4 xl:w-4 ml-0.5 xl:ml-1 transform transition-transform duration-300 ${
                           activeMenu === item.title ? "rotate-180" : ""
                         }`}
                       />
@@ -461,18 +463,18 @@ useEffect(() => {
                   </div>
                 ))}
 
-                <div className="hidden sm:flex items-center gap-2 ml-4">
+                <div className="hidden sm:flex items-center gap-1 xl:gap-2 ml-2 xl:ml-4">
                   {isAuthenticated ? (
                     <div className="relative">
                       <button
                         onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                        className="flex items-center gap-2 p-2 rounded-full hover:bg-red-50 transition-all duration-300 group"
+                        className="flex items-center gap-1 xl:gap-2 p-2 rounded-full hover:bg-red-50 transition-all duration-300 group"
                       >
-                        <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-                          <User className="h-5 w-5 text-white" />
+                        <div className="w-8 h-8 xl:w-10 xl:h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                          <User className="h-4 w-4 xl:h-5 xl:w-5 text-white" />
                         </div>
                         <ChevronDown
-                          className={`h-4 w-4 text-gray-600 transition-transform duration-300 ${showProfileDropdown ? "rotate-180" : ""}`}
+                          className={`h-3 w-3 xl:h-4 xl:w-4 text-gray-600 transition-transform duration-300 ${showProfileDropdown ? "rotate-180" : ""}`}
                         />
                       </button>
 
@@ -562,20 +564,21 @@ useEffect(() => {
                           scrollToTop()
                           navigateWithLoading("/login")
                         }}
-                        className="flex items-center gap-2 text-gray-700 hover:text-red-500 transition-all duration-300 font-medium text-sm"
+                        className="flex items-center gap-1 xl:gap-2 text-gray-700 hover:text-red-500 transition-all duration-300 font-medium text-xs xl:text-sm px-2 xl:px-3 py-1 xl:py-2"
                       >
-                        <LogIn className="h-4 w-4" />
-                        SignIn
+                        <LogIn className="h-3 w-3 xl:h-4 xl:w-4" />
+                        <span className="hidden lg:inline">SignIn</span>
                       </button>
                       <button
                         onClick={() => {
                           scrollToTop()
                           navigateWithLoading("/signIn")
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors text-sm"
+                        className="flex items-center gap-1 xl:gap-2 px-2 xl:px-4 py-1 xl:py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors text-xs xl:text-sm"
                       >
-                        <UserPlus className="h-4 w-4" />
-                        CreateAccount
+                        <UserPlus className="h-3 w-3 xl:h-4 xl:w-4" />
+                        <span className="hidden lg:inline">CreateAccount</span>
+                        <span className="lg:hidden">Join</span>
                       </button>
                     </>
                   )}
@@ -583,23 +586,32 @@ useEffect(() => {
                 {isAuthenticated && notificationButton}
               </div>
 
-              <button
-                className="lg:hidden p-2 transition-all duration-300 hover:opacity-70"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label="Toggle menu"
-              >
-                <div
-                  className={`w-6 h-0.5 bg-gray-600 mb-1.5 transition-transform ${
-                    isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
-                  }`}
-                ></div>
-                <div className={`w-6 h-0.5 bg-gray-600 mb-1.5 ${isMobileMenuOpen ? "opacity-0" : ""}`}></div>
-                <div
-                  className={`w-6 h-0.5 bg-gray-600 transition-transform ${
-                    isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
-                  }`}
-                ></div>
-              </button>
+              <div className="flex items-center gap-2 lg:gap-4">
+                {/* Mobile notification button for authenticated users */}
+                {isAuthenticated && (
+                  <div className="lg:hidden">
+                    {notificationButton}
+                  </div>
+                )}
+                
+                <button
+                  className="lg:hidden p-2 transition-all duration-300 hover:opacity-70"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  aria-label="Toggle menu"
+                >
+                  <div
+                    className={`w-6 h-0.5 bg-gray-600 mb-1.5 transition-transform ${
+                      isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
+                    }`}
+                  ></div>
+                  <div className={`w-6 h-0.5 bg-gray-600 mb-1.5 ${isMobileMenuOpen ? "opacity-0" : ""}`}></div>
+                  <div
+                    className={`w-6 h-0.5 bg-gray-600 transition-transform ${
+                      isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
+                    }`}
+                  ></div>
+                </button>
+              </div>
             </div>
 
             <AnimatePresence>

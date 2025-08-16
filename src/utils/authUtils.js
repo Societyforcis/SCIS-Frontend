@@ -21,8 +21,8 @@ export const handleGoogleAuth = async (isSignUp = false) => {
     
     // Call the appropriate backend endpoint
     const endpoint = isSignUp 
-      ? "http://localhost:5000/api/user/signin/google" 
-      : "http://localhost:5000/api/user/login/google";
+      ? `${import.meta.env.VITE_API_URL}/api/user/signin/google` 
+      : `${import.meta.env.VITE_API_URL}/api/user/login/google`;
       
     console.log(`Attempting ${isSignUp ? 'sign up' : 'login'} with Google:`, googleAuthData.email);
     

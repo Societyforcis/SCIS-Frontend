@@ -42,8 +42,8 @@ export default function ResetPassword() {
         email,
         newPassword: "********" // Don't log the actual password
       })
-      
-      const response = await axios.post('http://localhost:5000/api/user/reset-password', {
+
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/reset-password`, {
         email,
         newPassword: password
       })
