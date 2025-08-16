@@ -82,8 +82,17 @@ const AdminDashboard = () => {
   useEffect(() => {
     const checkAuth = async () => {
       // First check if auth is already in Redux store
-      if (token && user?.isAdmin) {
+      if (token && (user?.isAdmin || user?.email === 'societyforcis.org@gmail.com')) {
         console.log("Admin auth already in Redux store");
+        
+        // If user has the special email but isAdmin flag is not set, update it
+        if (user?.email === 'societyforcis.org@gmail.com' && !user.isAdmin) {
+          dispatch(setAuth({
+            token,
+            user: { ...user, isAdmin: true }
+          }));
+        }
+        
         setIsCheckingAuth(false);
         return;
       }
@@ -96,6 +105,16 @@ const AdminDashboard = () => {
         try {
           const parsedUser = JSON.parse(localUser);
           
+          // Check if user has the special admin email
+          const isAdminEmail = parsedUser.email === 'societyforcis.org@gmail.com';
+          
+          // Update isAdmin flag if it's the admin email
+          if (isAdminEmail && !parsedUser.isAdmin) {
+            parsedUser.isAdmin = true;
+            // Update localStorage with the modified user
+            localStorage.setItem('user', JSON.stringify(parsedUser));
+          }
+          
           // Restore auth state from localStorage to Redux
           dispatch(setAuth({
             token: localToken,
@@ -104,8 +123,8 @@ const AdminDashboard = () => {
           
           console.log("Restored auth state from localStorage");
           
-          // Check if the restored user is admin
-          if (!parsedUser.isAdmin) {
+          // Check if the restored user is admin or has admin email
+          if (!parsedUser.isAdmin && !isAdminEmail) {
             // User is not admin, redirect to home
             Swal.fire({
               title: 'Access Denied',
@@ -146,7 +165,7 @@ const AdminDashboard = () => {
     };
 
     checkAuth();
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, token, user]);
 
   // Show loading while checking authentication
   if (isCheckingAuth) {
@@ -161,7 +180,7 @@ const AdminDashboard = () => {
   }
 
   // Redirect if not admin after auth check is complete
-  if (!user?.isAdmin) {
+  if (!user?.isAdmin && user?.email !== 'societyforcis.org@gmail.com') {
     return <Navigate to="/" replace />;
   }
 

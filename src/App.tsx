@@ -487,6 +487,16 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
+          
+          {/* Add the new admin dashboard route */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <PrivateRoute>
+                <AdminDashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
         <Footer data-aos="fade-up" data-aos-delay="300" />
       </div>

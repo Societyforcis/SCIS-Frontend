@@ -34,7 +34,8 @@ export default function NewsletterSubscriberManagement() {
   const fetchSubscribers = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/admin/newsletter/subscribers', {
+      // Update the endpoint to match what's defined in your backend routes
+      const response = await fetch('http://localhost:5000/api/newsletter/subscriptions', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -46,7 +47,8 @@ export default function NewsletterSubscriberManagement() {
 
       const data = await response.json();
       if (data.success) {
-        setSubscribers(data.subscribers);
+        // Update the property name to match the response format from your API
+        setSubscribers(data.data); // Changed from data.subscribers to data.data based on newsletterController.js
       }
     } catch (error) {
       console.error('Error fetching subscribers:', error);
