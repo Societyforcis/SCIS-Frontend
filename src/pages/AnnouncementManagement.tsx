@@ -3,6 +3,9 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { Loader2, Image as ImageIcon, X } from 'lucide-react';
 
+// Use hardcoded URL for now to avoid environment variable issues
+const API_BASE_URL = 'http://localhost:5000';
+
 interface FormValues {
   title: string;
   message: string;
@@ -12,6 +15,12 @@ interface FormValues {
   specificRecipients?: string;
   link?: string;
   image?: string;
+}
+
+interface ApiResponse {
+  success: boolean;
+  message?: string;
+  data?: any;
 }
 
 const AnnouncementManagement = () => {
@@ -113,28 +122,40 @@ const AnnouncementManagement = () => {
       setIsSubmitting(true);
 
       // Prepare recipients
-      let recipientsList = data.recipients === 'all' ? [] : 
+      let recipientsList = data.recipients === 'all' ? 'all' : 
         data.specificRecipients?.split(',').map(email => email.trim()).filter(Boolean) || [];
+
+      // Process image data if present
+      let imageData = null;
+      let imageType = null;
+      if (previewImage) {
+        const matches = previewImage.match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
+        if (matches && matches.length === 3) {
+          imageType = matches[1];
+          imageData = matches[2];
+        }
+      }
 
       const payload = {
         title: data.title,
         message: data.message,
         type: data.type,
         priority: data.priority,
-        isForAllUsers: data.recipients === 'all',
         recipients: recipientsList,
         link: data.link || '',
-        image: previewImage // Send base64 image data
+        image: imageData,
+        imageType: imageType
       };
 
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/notifications/ok`, payload, {
+      const response = await axios.post(`${API_BASE_URL}/api/notifications`, payload, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
 
-      if (response.data.success) {
+      const responseData = response.data as ApiResponse;
+      if (responseData?.success) {
         showToast('Success', 'Announcement sent successfully!', 'success');
         reset();
         setPreviewImage(null);

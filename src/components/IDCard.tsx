@@ -1,9 +1,10 @@
 "use client"
 
-import { UserIcon } from "lucide-react"
-import { useEffect, useState } from "react"
+import { UserIcon, Download } from "lucide-react"
+import { useEffect, useState, useRef } from "react"
 import axios from "axios"
 import { QRCodeSVG } from "qrcode.react"
+import html2canvas from "html2canvas"
 import gold from "./images/gold.png"
 import styles from "./IDCard.module.css"
 import { useParams } from "react-router-dom"
@@ -51,7 +52,9 @@ export default function IDCard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [membership, setMembership] = useState<MembershipData | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { id: urlMembershipId } = useParams<{ id?: string }>();
+  const cardRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const fetchMembershipData = async () => {
@@ -157,6 +160,46 @@ export default function IDCard() {
     fetchMembershipData();
   }, [urlMembershipId]);
 
+  const downloadCard = async () => {
+    if (!cardRef.current || !membership) return;
+    
+    try {
+      setIsDownloading(true);
+      
+      // Create canvas from the card element
+      const canvas = await html2canvas(cardRef.current, {
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        width: cardRef.current.offsetWidth * 2,
+        height: cardRef.current.offsetHeight * 2
+      });
+      
+      // Convert canvas to blob
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob!);
+        }, 'image/png', 1.0);
+      });
+      
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `ID-Card-${membership.membershipId || 'member'}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Error downloading card:', error);
+      alert('Failed to download card. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[70vh]">
@@ -196,8 +239,22 @@ export default function IDCard() {
   const formattedExpiryDate = formatDate(membership.expiryDate)
 
   return (
-    <div className="flex justify-center py-10 px-4">
+    <div className="flex flex-col items-center py-10 px-4">
+      {/* Download Button */}
+      <div className="mb-6">
+        <button
+          onClick={downloadCard}
+          disabled={isDownloading}
+          className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+        >
+          <Download className="h-5 w-5" />
+          {isDownloading ? 'Downloading...' : 'Download ID Card'}
+        </button>
+      </div>
+
+      {/* ID Card */}
       <div
+        ref={cardRef}
         className="relative w-[800px] h-[430px] rounded-xl overflow-hidden shadow-2xl border"
         style={{
           backgroundImage: `url(${gold})`,
