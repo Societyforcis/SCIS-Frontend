@@ -147,7 +147,7 @@ const SignIn= () => {
       if (response.ok) {
         setShowProfileModal(false)
         window.dispatchEvent(new Event("authStatusChanged"))
-        navigate("/Home")
+        navigate("/")
       }
     } catch (error) {
       console.error("Error updating profile:", error)
@@ -157,7 +157,7 @@ const SignIn= () => {
   const handleSkipProfile = () => {
     setShowProfileModal(false)
     window.dispatchEvent(new Event("authStatusChanged"))
-    navigate("/Home")
+    navigate("/")
   }
 
   const handleGoogleSignIn = async () => {

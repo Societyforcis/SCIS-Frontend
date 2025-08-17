@@ -421,7 +421,7 @@ const Login = () => {
     const userEmail = localStorage.getItem('email');
     
     if (!userEmail) {
-      navigate('/Home');
+      navigate('/');
       return;
     }
     
@@ -431,7 +431,7 @@ const Login = () => {
       
       // If user is already a member with active status, go directly to home
       if (membershipStatus.isMember) {
-        navigate('/Home');
+        navigate('/');
         return;
       }
       
@@ -451,7 +451,7 @@ const Login = () => {
           navigate('/membership-form');
         } else {
           // User doesn't want to become a member
-          navigate('/Home');
+          navigate('/');
         }
       });
     } catch (error) {
@@ -470,7 +470,7 @@ const Login = () => {
         if (result.isConfirmed) {
           navigate('/membership-form');
         } else {
-          navigate('/Home');
+          navigate('/');
         }
       });
     }
