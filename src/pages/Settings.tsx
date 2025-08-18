@@ -183,8 +183,8 @@ const Settings = () => {
       }
       
       console.log("Sending settings update with explicit booleans:", payload)
-      
-      const response = await fetch("${import.meta.env.VITE_API_URL}/api/user/settings", {
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/settings`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

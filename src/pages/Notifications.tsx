@@ -24,6 +24,9 @@ import {
 import { useAppSelector } from "../redux/hooks"
 import { toast } from "react-toastify"
 
+// API Configuration
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 interface Notification {
   _id: string
   title: string
@@ -77,8 +80,7 @@ const Notifications = () => {
         return
       }
 
-      const apiBase = process.env.NODE_ENV === "production" ? "/api" : `${import.meta.env.VITE_API_URL}/api`
-      const response = await fetch(`${apiBase}/notifications/user`, {
+      const response = await fetch(`${API_BASE_URL}/api/notifications/user`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -122,8 +124,7 @@ const Notifications = () => {
         return
       }
 
-      const apiBase = process.env.NODE_ENV === "production" ? "/api" : `${import.meta.env.VITE_API_URL}/api`
-      const response = await fetch(`${apiBase}/notifications/${id}/read`, {
+      const response = await fetch(`${API_BASE_URL}/api/notifications/${id}/read`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -159,8 +160,7 @@ const Notifications = () => {
         return
       }
 
-      const apiBase = process.env.NODE_ENV === "production" ? "/api" : `${import.meta.env.VITE_API_URL}/api`
-      const response = await fetch(`${apiBase}/notifications/mark-all-read`, {
+      const response = await fetch(`${API_BASE_URL}/api/notifications/mark-all-read`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -187,8 +187,7 @@ const Notifications = () => {
     if (!token) return
 
     try {
-      const apiBase = process.env.NODE_ENV === "production" ? "/api" : `${import.meta.env.VITE_API_URL}/api`
-      const response = await fetch(`${apiBase}/notifications/unread-count`, {
+      const response = await fetch(`${API_BASE_URL}/api/notifications/unread-count`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

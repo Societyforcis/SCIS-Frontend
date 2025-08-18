@@ -45,7 +45,7 @@ export default function UserManagement() {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/user/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -65,6 +65,7 @@ export default function UserManagement() {
     user.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.lastName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  // f
 
   return (
     <div className="bg-white rounded-lg shadow p-6">

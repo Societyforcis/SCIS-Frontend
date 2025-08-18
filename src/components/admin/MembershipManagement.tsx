@@ -92,7 +92,7 @@ export default function MembershipManagement() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/membership/${id}`, {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/memberships/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -139,7 +139,7 @@ export default function MembershipManagement() {
     if (!editingMembership) return;
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/membership/${editingMembership._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/memberships/${editingMembership._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

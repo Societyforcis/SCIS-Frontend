@@ -28,6 +28,9 @@ import {
 import lo from "./images/lo.png"
 import { useAppSelector, useAppDispatch } from "../redux/hooks"
 import { logout, setAuth } from "../redux/slices/authSlice"
+
+// API Configuration
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import axios from 'axios';
 
 declare global {
@@ -173,11 +176,7 @@ const fetchUnreadCount = async () => {
   }
   
   try {
-    const apiBase = process.env.NODE_ENV === 'production' 
-      ? '/api' 
-      : `${import.meta.env.VITE_API_URL}/api`;
-      
-    const response = await fetch(`${apiBase}/notifications/unread-count`, {
+    const response = await fetch(`${API_BASE_URL}/api/notifications/unread-count`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -214,7 +213,7 @@ useEffect(() => {
       const userId = localStorage.getItem('userId') || '65f8e4b7d4f8a8c8f8f8';
       
       await axios.patch(
-        `${import.meta.env.VITE_API_URL}/api/notifications/mark-all-read?userId=${userId}`,
+        `${API_BASE_URL}/api/notifications/mark-all-read?userId=${userId}`,
         {},
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {}

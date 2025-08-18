@@ -56,11 +56,15 @@ export default function EmailSubscribe() {
     return () => clearInterval(timer)
   }, [])
 
+  // Add better error handling and debugging to your handleSubmit function
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitStatus({ loading: true, message: "", error: false });
 
     try {
+      console.log('Submitting form data:', formData);
+      console.log('API URL:', import.meta.env.VITE_API_URL);
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/newsletter/subscribe`, {
         method: 'POST',
         headers: {
@@ -69,12 +73,14 @@ export default function EmailSubscribe() {
         body: JSON.stringify(formData)
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (response.ok) {
         setSubmitStatus({
           loading: false,
-          message: "🎉 Successfully subscribed! Please check your email for confirmation.",
+          message: data.message || "🎉 Successfully subscribed! Please check your email for confirmation.",
           error: false
         });
         // Reset form
@@ -86,11 +92,10 @@ export default function EmailSubscribe() {
           frequency: "weekly"
         });
       } else {
-        // Handle specific error cases
-        const errorMessage = data.message || 'Subscription failed';
-        throw new Error(errorMessage);
+        throw new Error(data.message || `Server error: ${response.status}`);
       }
     } catch (error: any) {
+      console.error('Subscription error:', error);
       setSubmitStatus({
         loading: false,
         message: error.message || "Failed to subscribe. Please try again.",

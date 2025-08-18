@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAjqLggbUNMT3taPd-xTkcfF4Hjkezq0zQ",
-  authDomain: "cyber-societycis.firebaseapp.com",
-  projectId: "cyber-societycis",
-  storageBucket: "cyber-societycis.firebasestorage.app",
-  messagingSenderId: "912756369690",
-  appId: "1:912756369690:web:d59467d2938c65f28fe4a3"
+  apiKey: "AIzaSyAa1PaQvF1b7r_zEZV9VqEOm9xto0bDya4",
+  authDomain: "societycis.firebaseapp.com",
+  projectId: "societycis",
+  storageBucket: "societycis.firebasestorage.app",
+  messagingSenderId: "443163056784",
+  appId: "1:443163056784:web:b4ef78c9b6dd39a5489615"
 };
 
 const app = initializeApp(firebaseConfig);

@@ -27,7 +27,7 @@ export default function ForgotPassword() {
 
     setIsSubmitting(true)
     try {
-      const response = await axios.post("${import.meta.env.VITE_API_URL}/api/user/forgot-password", { email })
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/forgot-password`, { email })
       if (response.data.success) {
         setEmailSent(true)
         setStep(2)
@@ -67,8 +67,8 @@ export default function ForgotPassword() {
         email,
         otp,
       })
-      
-      const response = await axios.post("${import.meta.env.VITE_API_URL}/api/user/verify-otp", {
+
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/verify-otp`, {
         email,
         otp,
       })

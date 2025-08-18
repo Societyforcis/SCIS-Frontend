@@ -35,7 +35,7 @@ export default function NewsletterSubscriberManagement() {
     setLoading(true);
     try {
       // Update the endpoint to match what's defined in your backend routes
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/newsletter/subscriptions`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -48,7 +48,7 @@ export default function NewsletterSubscriberManagement() {
       const data = await response.json();
       if (data.success) {
         // Update the property name to match the response format from your API
-        setSubscribers(data.data); // Changed from data.subscribers to data.data based on newsletterController.js
+        setSubscribers(data.subscribers); // Match the response from adminController.js
       }
     } catch (error) {
       console.error('Error fetching subscribers:', error);
@@ -74,7 +74,7 @@ export default function NewsletterSubscriberManagement() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/subscriber/${id}`, {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -111,7 +111,7 @@ export default function NewsletterSubscriberManagement() {
     if (!editingSubscriber) return;
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/subscriber/${editingSubscriber._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/${editingSubscriber._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ export default function NewsletterSubscriberManagement() {
 
   const handleToggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/subscriber/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/newsletter/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
