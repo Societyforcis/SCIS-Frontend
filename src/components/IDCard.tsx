@@ -53,6 +53,8 @@ export default function IDCard() {
   const [error, setError] = useState<string | null>(null);
   const [membership, setMembership] = useState<MembershipData | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [hasPendingBooking, setHasPendingBooking] = useState(false);
+  const [bookingStatus, setBookingStatus] = useState<string>('');
   const { id: urlMembershipId } = useParams<{ id?: string }>();
   const cardRef = useRef<HTMLDivElement>(null);
   
@@ -74,6 +76,35 @@ export default function IDCard() {
           hasStoredId: !!storedMembershipId 
         });
         
+        // First, check if user has a pending booking
+        if (token && email && !membershipId) {
+          try {
+            const bookingResponse = await axios.get(
+              `${import.meta.env.VITE_API_URL}/api/booking/status`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                }
+              }
+            );
+            
+            if (bookingResponse.data.success && bookingResponse.data.booking) {
+              const booking = bookingResponse.data.booking;
+              setBookingStatus(booking.bookingStatus);
+              
+              if (booking.bookingStatus === 'pending') {
+                setHasPendingBooking(true);
+                setLoading(false);
+                return; // Don't try to fetch membership if booking is pending
+              }
+            }
+          } catch (bookingError) {
+            console.log('No booking found or error checking booking:', bookingError);
+            // Continue to membership check
+          }
+        }
+        
         let response;
         
         // CASE 1: We have a membership ID (either from URL or localStorage)
@@ -87,7 +118,7 @@ export default function IDCard() {
             );
             
             console.log('📥 API Response status:', response.status);
-          } catch (idError) {
+          } catch (idError: any) {
             console.error('Error fetching by ID:', idError.message);
             
             // If we have auth credentials, try the email endpoint as fallback
@@ -204,6 +235,87 @@ export default function IDCard() {
     return (
       <div className="flex justify-center items-center min-h-[70vh]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
+
+  // Show pending booking message
+  if (hasPendingBooking && bookingStatus === 'pending') {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center px-4 py-10">
+        <div className="max-w-2xl w-full bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl shadow-2xl border-2 border-yellow-200 overflow-hidden">
+          <div className="bg-gradient-to-r from-yellow-400 to-orange-400 px-8 py-6 text-white">
+            <div className="flex items-center justify-center gap-3">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-3 border-b-3 border-white"></div>
+              <h2 className="text-2xl font-bold">Verification in Progress</h2>
+            </div>
+          </div>
+          
+          <div className="p-8 text-center space-y-6">
+            <div className="bg-white rounded-xl p-6 shadow-md">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                🎉 Thank You for Submitting Your Membership Application!
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                Your application is currently being reviewed by our admin team.
+              </p>
+            </div>
+
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 p-6 rounded-r-xl text-left">
+              <h4 className="font-semibold text-yellow-900 mb-3 flex items-center gap-2">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                What happens next?
+              </h4>
+              <ul className="space-y-2 text-yellow-800">
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-600 font-bold">•</span>
+                  <span>Our admin team will review your application and payment details</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-600 font-bold">•</span>
+                  <span>This process typically takes 1-3 business days</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-600 font-bold">•</span>
+                  <span>You'll receive an email notification once your membership is approved</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-600 font-bold">•</span>
+                  <span>After approval, you can view and download your membership card from this page</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-md">
+              <p className="text-gray-600 mb-4">
+                <strong className="text-gray-900">Please wait for admin verification.</strong> 
+                <br />
+                Once approved, you'll be able to view your membership card here.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={() => window.location.reload()}
+                  className="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors font-semibold shadow-md hover:shadow-lg"
+                >
+                  Check Status
+                </button>
+                <button
+                  onClick={() => window.location.href = '/booking-confirmation'}
+                  className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-semibold shadow-md hover:shadow-lg"
+                >
+                  View Full Details
+                </button>
+              </div>
+            </div>
+
+            <div className="text-sm text-gray-500">
+              <p>Need help? Contact us at <a href="mailto:societyforcis.org@gmail.com" className="text-blue-600 hover:underline font-medium">societyforcis.org@gmail.com</a></p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -50,14 +50,15 @@ const Membership = () => {
   const [success, setSuccess] = useState("")
   const [error, setError] = useState("")
   const [isMember, setIsMember] = useState(false)
+  const [hasPendingBooking, setHasPendingBooking] = useState(false)
   const navigate = useNavigate()
   const { user, token } = useAppSelector(state => state.auth)
 
   const plans: MembershipPlan[] = [
     {
-      id: "student",
-      name: "Student",
-      price: 500,
+      id: "student-ug",
+      name: "Student UG",
+      price: 250,
       duration: "1 Year",
       features: [
         "Access to research papers",
@@ -71,17 +72,33 @@ const Membership = () => {
       color: "from-blue-500 to-blue-600",
     },
     {
-      id: "professional",
-      name: "Professional",
-      price: 2000,
+      id: "student-pg",
+      name: "Student PG",
+      price: 350,
       duration: "1 Year",
       features: [
-        "All Student benefits",
-        "Professional certification",
-        "Industry networking events",
+        "All UG benefits",
         "Advanced research access",
-        "Career development resources",
-        "Priority support",
+        "Workshop participation",
+        "Career mentorship",
+        "Industry connections",
+      ],
+      current: false,
+      icon: <Users className="h-8 w-8" />,
+      color: "from-green-500 to-green-600",
+    },
+    {
+      id: "academic",
+      name: "Academic",
+      price: 500,
+      duration: "1 Year",
+      features: [
+        "All student benefits",
+        "Professional certification",
+        "Research collaboration opportunities",
+        "Academic networking events",
+        "Priority workshop access",
+        "Teaching resources",
       ],
       current: false,
       popular: true,
@@ -89,22 +106,38 @@ const Membership = () => {
       color: "from-red-500 to-red-600",
     },
     {
-      id: "corporate",
-      name: "Corporate",
-      price: 10000,
+      id: "industry",
+      name: "Industry",
+      price: 750,
       duration: "1 Year",
       features: [
-        "All Professional benefits",
+        "All academic benefits",
+        "Industry networking events",
         "Corporate training programs",
         "Priority support",
-        "Custom research reports",
-        "Executive networking",
+        "Custom research access",
         "Brand visibility opportunities",
-        "Dedicated account manager",
       ],
       current: false,
       icon: <Building className="h-8 w-8" />,
       color: "from-purple-500 to-purple-600",
+    },
+    {
+      id: "international",
+      name: "International",
+      price: 600,
+      duration: "1 Year",
+      features: [
+        "All academic benefits",
+        "Global networking opportunities",
+        "International conference access",
+        "Cross-border collaboration",
+        "Remote participation privileges",
+        "Digital resources library",
+      ],
+      current: false,
+      icon: <Award className="h-8 w-8" />,
+      color: "from-orange-500 to-orange-600",
     },
   ]
 
@@ -123,6 +156,33 @@ const Membership = () => {
       }
 
       console.log("Fetching membership for user:", user.email);
+      
+      // First, check if user has a pending booking (not yet approved)
+      try {
+        const bookingResponse = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/booking/status`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        
+        if (bookingResponse.data.success && bookingResponse.data.booking) {
+          const booking = bookingResponse.data.booking;
+          if (booking.bookingStatus === 'pending') {
+            console.log("User has pending booking - no approved membership yet");
+            setHasPendingBooking(true);
+            setIsMember(false); // Important: not a member until approved
+            setLoading(false);
+            return; // Don't try to fetch membership
+          }
+        }
+      } catch (bookingError) {
+        console.log("No booking found or error checking booking:", bookingError);
+        // Continue to membership check
+      }
       
       // Try first by email directly since that might be more reliable
       let membershipResponse;
@@ -147,14 +207,18 @@ const Membership = () => {
         
         // Map membership type to plan ID (case-insensitive)
         const membershipType = (membership.membershipType || '').toLowerCase();
-        let planId = 'student'; // default to student
+        let planId = 'student-ug'; // default to student-ug
         
-        if (membershipType.includes('professional')) {
-          planId = 'professional';
-        } else if (membershipType.includes('corporate') || membershipType.includes('enterprise')) {
-          planId = 'corporate';
-        } else if (membershipType.includes('student')) {
-          planId = 'student';
+        if (membershipType.includes('student-pg') || membershipType === 'student-pg') {
+          planId = 'student-pg';
+        } else if (membershipType.includes('student-ug') || membershipType === 'student-ug' || membershipType === 'student') {
+          planId = 'student-ug';
+        } else if (membershipType.includes('academic') || membershipType.includes('professional')) {
+          planId = 'academic';
+        } else if (membershipType.includes('industry') || membershipType.includes('corporate')) {
+          planId = 'industry';
+        } else if (membershipType.includes('international')) {
+          planId = 'international';
         }
         
         console.log("Membership type:", membershipType, "mapped to plan:", planId);
@@ -197,14 +261,18 @@ const Membership = () => {
               
               // Map membership type to plan ID (case-insensitive)
               const membershipType = (membership.membershipType || '').toLowerCase();
-              let planId = 'student'; // default to student
+              let planId = 'student-ug'; // default to student-ug
               
-              if (membershipType.includes('professional')) {
-                planId = 'professional';
-              } else if (membershipType.includes('corporate') || membershipType.includes('enterprise')) {
-                planId = 'corporate';
-              } else if (membershipType.includes('student')) {
-                planId = 'student';
+              if (membershipType.includes('student-pg') || membershipType === 'student-pg') {
+                planId = 'student-pg';
+              } else if (membershipType.includes('student-ug') || membershipType === 'student-ug' || membershipType === 'student') {
+                planId = 'student-ug';
+              } else if (membershipType.includes('academic') || membershipType.includes('professional')) {
+                planId = 'academic';
+              } else if (membershipType.includes('industry') || membershipType.includes('corporate')) {
+                planId = 'industry';
+              } else if (membershipType.includes('international')) {
+                planId = 'international';
               }
               
               console.log("Membership type:", membershipType, "mapped to plan:", planId);
@@ -253,11 +321,30 @@ const Membership = () => {
       const currentMembership = currentMembershipResponse.data.membership;
       const currentType = (currentMembership?.membershipType || "").toLowerCase();
 
-      // Validate that this is a valid upgrade path
-      if (
-        (currentType.includes('corporate') && planId !== 'corporate') ||
-        (currentType.includes('professional') && planId === 'student')
-      ) {
+      // Validate that this is a valid upgrade path (prevent downgrades)
+      // Price hierarchy: student-ug (250) < student-pg (350) < academic (500) < international (600) < industry (750)
+      const priceHierarchy = {
+        'student-ug': 250,
+        'student-pg': 350,
+        'academic': 500,
+        'international': 600,
+        'industry': 750
+      };
+      
+      // Map old types to new types for backward compatibility
+      let normalizedCurrentType = currentType;
+      if (currentType.includes('student') && !currentType.includes('-')) {
+        normalizedCurrentType = 'student-ug';
+      } else if (currentType.includes('professional')) {
+        normalizedCurrentType = 'academic';
+      } else if (currentType.includes('corporate')) {
+        normalizedCurrentType = 'industry';
+      }
+      
+      const currentPrice = priceHierarchy[normalizedCurrentType as keyof typeof priceHierarchy] || 0;
+      const targetPrice = priceHierarchy[planId as keyof typeof priceHierarchy] || 0;
+      
+      if (currentPrice >= targetPrice) {
         setError("You cannot downgrade from your current plan");
         return;
       }
@@ -296,10 +383,19 @@ const Membership = () => {
   const handlePlanAction = async (planId: string) => {
     if (isMember) {
       // Don't allow downgrading from higher plans to lower plans
-      if (
-        (currentPlan?.id === 'corporate' && (planId === 'professional' || planId === 'student')) || 
-        (currentPlan?.id === 'professional' && planId === 'student')
-      ) {
+      // Price hierarchy: student-ug (250) < student-pg (350) < academic (500) < international (600) < industry (750)
+      const priceHierarchy = {
+        'student-ug': 250,
+        'student-pg': 350,
+        'academic': 500,
+        'international': 600,
+        'industry': 750
+      };
+      
+      const currentPrice = priceHierarchy[currentPlan?.id as keyof typeof priceHierarchy] || 0;
+      const targetPrice = priceHierarchy[planId as keyof typeof priceHierarchy] || 0;
+      
+      if (currentPrice >= targetPrice) {
         Swal.fire({
           icon: 'warning',
           title: 'Downgrade Not Allowed',
@@ -444,10 +540,48 @@ const Membership = () => {
               <Sparkles className="h-5 w-5 text-red-500 mr-2" />
               {isMember ? "Manage your membership plan" : "Choose the perfect plan for your needs"}
             </p>
+            
+            {/* View Membership Card Button */}
+            {isMember && (
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={() => navigate('/id-card')}
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold"
+                >
+                  <Award className="h-5 w-5" />
+                  View Membership Card
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Status Messages */}
+        {hasPendingBooking && (
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8 rounded-lg max-w-4xl mx-auto">
+            <div className="flex items-start">
+              <Loader className="h-6 w-6 text-yellow-600 mr-3 mt-0.5 animate-spin" />
+              <div>
+                <h3 className="text-lg font-semibold text-yellow-900 mb-2">Membership Application Pending</h3>
+                <p className="text-yellow-800 mb-3">
+                  Your membership booking has been submitted and is currently under review by our admin team.
+                </p>
+                <p className="text-yellow-700 text-sm">
+                  ✅ You will receive an email notification once your membership is approved<br />
+                  ✅ After approval, you can view and download your membership card<br />
+                  ✅ Review typically takes 1-3 business days
+                </p>
+                <button
+                  onClick={() => navigate('/booking-confirmation')}
+                  className="mt-4 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+                >
+                  Check Application Status
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-6 mb-8 rounded-lg max-w-4xl mx-auto">
             <div className="flex items-center">

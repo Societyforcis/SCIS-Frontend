@@ -11,6 +11,7 @@ import MembershipManagement from '../../components/admin/MembershipManagement';
 import AnnouncementManagement from '../../components/admin/AnnouncementManagement';
 import ProfileManagement from '../../components/admin/ProfileManagement';
 import NewsletterSubscriberManagement from '../../components/admin/NewsletterSubscriberManagement';
+import BookingManagement from '../../components/admin/BookingManagement';
 
 const AdminDashboard = () => {
   const { user, token } = useAppSelector((state) => state.auth);
@@ -192,6 +193,8 @@ const AdminDashboard = () => {
         return <ProfileManagement />;
       case 'memberships':
         return <MembershipManagement />;
+      case 'bookings':
+        return <BookingManagement />;
       case 'announcements':
         return <AnnouncementManagement />;
       case 'newsletters':
@@ -261,6 +264,16 @@ const AdminDashboard = () => {
                 }`}
               >
                 Memberships
+              </button>
+              <button
+                onClick={() => setActiveTab('bookings')}
+                className={`py-4 px-6 text-sm font-medium ${
+                  activeTab === 'bookings'
+                    ? 'border-b-2 border-blue-500 text-blue-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                Booking Requests
               </button>
               <button
                 onClick={() => setActiveTab('announcements')}

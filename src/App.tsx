@@ -85,6 +85,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 import Membership from './pages/Membership';
+import BookingConfirmation from './pages/BookingConfirmation';
 import { store } from './redux/store';
 import { setAuth, logout } from './redux/slices/authSlice';
 import AuthGuard from './components/AuthGuard';
@@ -478,6 +479,14 @@ const AppContent = () => {
           } />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/membership" element={<Membership />} />
+          <Route 
+            path="/booking-confirmation" 
+            element={
+              <AuthGuard>
+                <BookingConfirmation />
+              </AuthGuard>
+            } 
+          />
 
           <Route
             path="/admin"
